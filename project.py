@@ -1,179 +1,229 @@
 def menu():
-    print("Welcome to MyBookStore")
-    print("1. View Customer Account")
-    print("2. Books Available")
-    print("3. View Pending Orders")
-    print("4. Place an Order")
-    print("5. Cancel Pending Order")
-    print("6. Add an Account")
-    print("7. Update an Account")
-    print("8. Delete an Account")
-    print("9. View an Account")
-    print("---------------------")
+    print("________________________________________________________")
+    print("Welcome MyBookStore")
+    print("1. Books Available")
+    print("2. View Customer Account")
+    print("3. Add an Account")
+    print("4. Update an Account")
+    print("5. Delete an Account")
+    print("6. Place an Order")
+    print("7. View Pending Orders")
+    print("8. Cancel Pending Order")
+    print("9. Get the latest books")
+    print("______________________________")
     print("0. Exit")
 
-def viewd():
-    print("View Database")
-    from pymongo import MongoClient
-    from pprint import pprint
 
-    client = MongoClient(port=27017)
-    db = client.test
-    collections = db.list_collection_names()
+def getbooks():
+        import json
+        from pymongo import MongoClient
+        client = MongoClient(port=27017)
+        db = client.test
+        collection = db.products
 
-    for a in range(len(collections)):
-        testCollection = collections[a]
-        pprint(f"Collection name: {testCollection}")
-        colldoc = db.get_collection(testCollection)
-        for documents in colldoc.find():
-            pprint(documents)
-
+        with open("boo.json") as b:
+            data = json.load(b)
+            collection.insert_many(data)  
+            print("New Documents has been uploaded to Database!")
 
 def viewc():
-    print("View Customer Account")
-    from pymongo import MongoClient
-    from pprint import pprint
-
-    client = MongoClient(port=27017)
-    db = client.test
-    collection = db.customers
-
-    customers = collection.find()
+    try:
+        print("View Customer Account")
+        from pprint import pprint
+        from pymongo import MongoClient
+        from tabulate import tabulate
+        
+        
     
-    for documents in customers:
-        print(documents)
+        client = MongoClient(port=27017)
+        db = client.test
+        collection = db.customers
 
+        customer = []
+        for view in collection.find():
+            customer.append(view)
+        
+    
+        pprint(tabulate(customer, headers="keys"))
+
+    except Exception:
+        print("Enter a number! Try again from the start!")
+        viewc()
+       
 def viewp():
-    print("View Our Products")
-    from pymongo import MongoClient
-    from pprint import pprint
+    try:
+        print("View Our Products")
+        from pymongo import MongoClient
+        from tabulate import tabulate
+        
 
-    client = MongoClient(port=27017)
-    db = client.test
-    collection = db.products
+        client = MongoClient(port=27017)
+        db = client.test
+        collection = db.products
 
-    products = collection.find()
-    
-    for documents in products:
-        print(documents)
+        products = []
+        for view in collection.find():
+            products.append(view)
+
+        print(tabulate(products, headers="keys"))
+
+    except Exception:
+        print("Enter a number! Try again from the start!")
+        viewp()
+
 
 def ordersp():
-    print("Pending Orders")
-    from pymongo import MongoClient
-    from pprint import pprint
+    try:
+        print("Pending Orders")
+        print("Processing your order")
+        from pymongo import MongoClient
+        from tabulate import tabulate
+        
 
-    client = MongoClient(port=27017)
-    db = client.test
-    collection = db.orders
+        client = MongoClient(port=27017)
+        db = client.test
+        collection = db.orders
 
-    products = collection.find()
-    
-    for documents in products:
-        print(documents)
+        orders = []
+        for view in collection.find({}, {"_id": False}):          
+            orders.append(view)
+
+        print(tabulate(orders, headers="keys"))
+
+
+    except Exception:
+        print("Enter a number! Try again from the start!")
+        ordersp()
+
 
 def orders():
-    print("Place your order")
+    try:
+        print("Place your order")
 
-    from pymongo import MongoClient
-    from pprint import pprint
+        from pymongo import MongoClient
+        
 
-    client = MongoClient(port=27017)
-    db = client.test
-    collection = db.orders
+        client = MongoClient(port=27017)
+        db = client.test
+        collection = db.orders
 
-    customerid = int(input("Enter your ID: "))
-    productid = int(input("Enter the product ID: "))
-    qty = int(input("Enter the quantity of books: "))
+        customername = (input("Enter Customer Name: "))
+        productid = float(input("Enter the product ID of the book that you want to order: "))
+        qty = float(input("Enter the quantity of books: "))
+        
 
-    neworder = {"_id" : (customerid), "productid": (productid), "quantity": (qty)}
-    collection.insert_one(neworder)
-    print("Your Order has been Placed!!!")
-    print()
-
+        neworder = {"CustomerName" : (customername), "productid": (productid), "Quantity of Books": (qty)}
+        collection.insert_one(neworder)
+        print("Your Order has been Placed!!!")
+        print()
+    except Exception as some:
+        print(some)
+    except Exception:
+        print("Enter a number! Try again from the start!")
+        orders()
 
 
 def update():
-    print("Update a Document")
+    try:
+        print("Update a Document")
 
-    from pymongo import MongoClient
-    from pprint import pprint
+        from pymongo import MongoClient
+        
 
-    client = MongoClient(port=27017)
-    db = client.test
-    collection = db.customers
-    
-    ids = int(input("Enter the ID that you want to update: "))
-    fname = input("Enter your Fullname: ")
-    cname = input("Enter your contactname: ")
-    address = input("Enter your address: ")
-    city = input("Enter your city: ")
-    pcode = int(input("Enter your postalcode: "))
-    country = input("Enter your country: ")
+        client = MongoClient(port=27017)
+        db = client.test
+        collection = db.customers
+        
+        ids = float(input("Enter the ID that you want to update: "))
+        fname = input("Enter your Fullname: ")
+        cname = input("Enter your contactname: ")
+        address = input("Enter your address: ")
+        city = input("Enter your city: ")
+        pcode = float(input("Enter your postalcode: "))
+        country = input("Enter your country: ")
 
 
-    collection.update_one({"_id": (ids)}, {"$set": {"CustomerName": (fname), "ContactName": (cname), "Address": (address), "City": (city), "PostalCode": (pcode), "Country": (country)}})
-    print("Document updated")
-    print()
-    
+        collection.update_one({"_id": (ids)}, {"$set": {"CustomerName": (fname), "ContactName": (cname), "Address": (address), "City": (city), "PostalCode": (pcode), "Country": (country)}})
+        print("Document updated")
+        print()
+    except Exception:
+        print("Enter a number! Try again from the start!")
+        update()
+
 
 def deleteo():
-    print("Cancel a Pending Orders")
-    from pymongo import MongoClient
-    from pprint import pprint
+    try:
+        print("Cancel a Pending Orders")
+        from pymongo import MongoClient
+        
 
-    client = MongoClient(port=27017)
-    db = client.test
-    collection = db.orders
+        client = MongoClient(port=27017)
+        db = client.test
+        collection = db.orders
 
-    ids = int(input("Enter order ID you want to cancel: "))
+        ids = input("Enter Customer Name: ")
+        pids = float(input("Enter product ID: "))
+        qty = float(input("Enter the Quantity: "))
 
-    cancel = {"_id" : (ids)}
-    collection.delete_one(cancel)
-    print("Order Cancelled!!!")
-    print()
+
+        collection.delete_one({"CustomerName" : (ids), "productid": (pids), "Quantity of Books": (qty)})
+        print("Order Cancelled!!!")
+        print()
+    except Exception:
+        print("Enter a number! Try again from the start!")
+        deleteo()
 
 def deletec():
-    print("Delete a Document")
+    try:
+        print("Delete a Document")
     
 
-    from pymongo import MongoClient
-    from pprint import pprint
+        from pymongo import MongoClient
+        
 
-    client = MongoClient(port=27017)
-    db = client.test
-    collection = db.customers
+        client = MongoClient(port=27017)
+        db = client.test
+        collection = db.customers
 
-    ids = int(input("Enter ID you want deleted: "))
+        ids = float(input("Enter account ID you want to delete: "))
 
-    newdocu = {"_id" : (ids)}
-    collection.delete_one(newdocu)
-    print("Document deleted")
-    print()
+        newdocu = {"_id" : (ids)}
+        collection.delete_one(newdocu)
+        print("Document deleted")
+        print()
+    except Exception:
+        print("Enter a number! Try again from the start!")
+        deletec()
 
 
 def add():
-    print("Add a document")
-    from pymongo import MongoClient
-    from pprint import pprint
+    try:
+        print("Add a document")
+        print("Remember your Unique ID!")
+        from pymongo import MongoClient
+        
 
-    client = MongoClient(port=27017)
-    db = client.test
-    collection = db.customers
+        client = MongoClient(port=27017)
+        db = client.test
+        collection = db.customers
 
-    ids = int(input("Enter your ID: "))
-    fname = input("Enter your Fullname: ")
-    cname = input("Enter your contactname: ")
-    address = input("Enter your address: ")
-    city = input("Enter your city: ")
-    pcode = int(input("Enter your postalcode: "))
-    country = input("Enter your country: ")
+        ids = float(input("Enter your ID: "))
+        fname = input("Enter your Fullname: ")
+        cname = input("Enter your contactname: ")
+        address = input("Enter your address: ")
+        city = input("Enter your city: ")
+        pcode = float(input("Enter your postalcode: "))
+        country = input("Enter your country: ")
 
 
-    newdocu = {"_id" : (ids), "CustomerName": (fname), "ContactName": (cname), "Address": (address), "City": (city), "PostalCode": (pcode), "Country": (country)}
+        newdocu = {"_id" : (ids), "CustomerName": (fname), "ContactName": (cname), "Address": (address), "City": (city), "PostalCode": (pcode), "Country": (country)}
 
-    collection.insert_one(newdocu)
-    print("New document addded")
-    print()
+        collection.insert_one(newdocu)
+        print("New document addded")
+        print()
+    except Exception:
+        print("Enter a number! Try again from the start!")
+        add()
 
     
 
@@ -185,23 +235,23 @@ choices = int(input("Choose an option: "))
 
 while choices != 0:
     if choices == 1:
-        viewc()   
+        viewp()   
     elif choices == 2:
-        viewp()
-    elif choices == 3:
-        ordersp()
-    elif choices == 4:
-        orders()
-    elif choices == 5:
-        deleteo()
-    elif choices == 6:
-        add()
-    elif choices == 7:
-        update()
-    elif choices == 8:
-        deletec()
-    elif choices == 9:
         viewc()
+    elif choices == 3:
+        add()
+    elif choices == 4:
+        update()
+    elif choices == 5:
+        deletec()
+    elif choices == 6:
+        orders()
+    elif choices == 7:
+        ordersp()
+    elif choices == 8:
+        deleteo()
+    elif choices == 9:
+        getbooks()
     else:
         print()
         print("The number was not on the options. Try again!!!")
