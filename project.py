@@ -29,7 +29,6 @@ def getbooks():
 def viewc():
     try:
         print("View Customer Account")
-        from pprint import pprint
         from pymongo import MongoClient
         from tabulate import tabulate
         
@@ -40,11 +39,12 @@ def viewc():
         collection = db.customers
 
         customer = []
+
         for view in collection.find():
             customer.append(view)
         
     
-        pprint(tabulate(customer, headers="keys"))
+        print(tabulate(customer, headers="keys"))
 
     except Exception:
         print("Enter a number! Try again from the start!")
@@ -116,8 +116,7 @@ def orders():
         collection.insert_one(neworder)
         print("Your Order has been Placed!!!")
         print()
-    except Exception as some:
-        print(some)
+    
     except Exception:
         print("Enter a number! Try again from the start!")
         orders()
@@ -192,7 +191,7 @@ def deletec():
         print("Document deleted")
         print()
     except Exception:
-        print("Enter a number! Try again from the start!")
+        print("Something went wrong!(Put a number on ID")
         deletec()
 
 
@@ -222,7 +221,7 @@ def add():
         print("New document addded")
         print()
     except Exception:
-        print("Enter a number! Try again from the start!")
+        print("Something went wrong!(ID already existed or Put numbers on ID and Postal Code)")
         add()
 
     
