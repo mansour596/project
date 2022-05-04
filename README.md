@@ -15,4 +15,4 @@ Need to fix the update function where it can choose what record to update on the
 Need to fix the delete function where it can choose what record to delete on the database instead of deleting everything at the same time.
 # Usage
 Pull the file from repository and run it in Visual Studio Code.
-Run and file in Visual Studio Code and perform the CRUD functions on the menu. Press 0 to end the application.
+Main menu will be introduced after running the file. Choose one of the functions available in the main menu to create, retrieve, udpate, or delete records inside the database.
