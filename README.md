@@ -13,6 +13,6 @@ Able to read a JSON or CSV file from a source and insert data in that file to th
 # To-do list
 Need to fix the update function where it can choose what record to update on the database instead of updating everything at the same time.
 Need to fix the delete function where it can choose what record to delete on the database instead of deleting everything at the same time.
-# Getting Started
+# Usage
 Pull the file from repository and run it in Visual Studio Code.
 Run and file in Visual Studio Code and perform the CRUD functions on the menu. Press 0 to end the application.
